@@ -175,6 +175,14 @@ AQI = MAX(SO2_IAQI, CO_IAQI, PM2.5_IAQI)
 - 发现 4：已改用 `com.mysql.cj.jdbc.Driver`（旧 `com.mysql.jdbc.Driver` 有弃用警告）；密码 MD5(`nep_2026_123456`) = `08fd5e46db299792277fd2c0315537b4`
 - 发现 5：`application.yml` 数据源已统一为 `root/root`（需本机 MySQL root 密码同步为 `root`）
 
+## [2026-07-23] NEPS 公众监督员端开发
+- 发现 1：NEPS 提示词 API 清单路径（`/api/supervisor/*`、`/api/region/*`、`/api/aqi/levels`、`/api/aqiFeedback/*`）与早期 `docs/api-list.md` 规划路径（`/api/provinces` 等）不一致；已以后端按 NEPS 提示词落地为准，前端严格对齐，`docs/api-list.md` 已同步为实际路径
+- 发现 2：组件库选 Vant 4（移动端优先），状态管理选 Pinia；Axios 走 Vite proxy `/api`→`8080`，避免浏览器直连跨域
+- 发现 3：Token 采用内存 UUID（`TokenUtil`），重启后端会失效，课程演示够用；鉴权拦截器排除注册/登录/查重与 `/api/test/**`
+- 发现 4：种子城市名为「北京」而非「北京市」，选择网格页展示为「北京市-北京」属数据问题，不是接口字段错误
+- 已确认 1：Token 方案固定为**内存 UUID**，不升级 JWT / 不落库（课设够用；重启后端需重新登录属预期行为）
+- 已确认 2：全项目接口路径以**实际已实现**为准（见 `docs/api-list.md`「已实现」），其他端（NEPG/NEPM/NEPV）禁止再使用早期规划路径
+
 ---
 
 ## 7. 上下文文件清单
@@ -184,4 +192,5 @@ AI 必须了解这些文件的位置：
 - `nep-backend/src/main/resources/sql/init.sql` - 8 张表建表 SQL（字段定义权威）
 - `nep-backend/src/main/resources/sql/seed.sql` - 种子数据
 - `nep-backend/src/main/java/com/neusoft/nep/entity/` - 8 个实体类
+- `nep-frontend-neps/` - 公众监督员端前端
 - 接口清单（开发中维护）：`docs/api-list.md`
