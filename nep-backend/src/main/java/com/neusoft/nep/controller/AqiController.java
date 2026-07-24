@@ -29,10 +29,11 @@ public class AqiController {
     public R levels() {
         List<Map<String, Object>> data = aqiService.listLevels().stream().map((Aqi a) -> {
             Map<String, Object> item = new HashMap<>();
-            item.put("level", a.getLevel());
-            item.put("grade", a.getGrade());
+            // 对外保持 NEPS 约定字段，内部映射官方表
+            item.put("level", a.getAqiId());
+            item.put("grade", a.getAqiExplain());
             item.put("color", a.getColor());
-            item.put("description", a.getDescription());
+            item.put("description", a.getHealthImpact());
             return item;
         }).collect(Collectors.toList());
         return R.success(data);

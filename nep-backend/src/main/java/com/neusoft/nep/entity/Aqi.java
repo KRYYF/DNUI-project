@@ -2,31 +2,40 @@ package com.neusoft.nep.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * AQI 等级实体
+ * AQI 等级（官方 nep.sql）
  */
 @Data
 @TableName("aqi")
 public class Aqi {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "aqi_id", type = IdType.AUTO)
+    private Integer aqiId;
 
-    /** AQI 等级 1-6 */
-    private Integer level;
+    private String chineseExplain;
 
-    /** 优/良/轻度污染/... */
-    private String grade;
+    private String aqiExplain;
 
-    private String description;
-
-    /** 前端展示颜色 */
     private String color;
 
-    @TableLogic
-    private Integer deleted;
+    private String healthImpact;
+
+    private String takeSteps;
+
+    private Integer so2Min;
+
+    private Integer so2Max;
+
+    private Integer coMin;
+
+    private Integer coMax;
+
+    private Integer spmMin;
+
+    private Integer spmMax;
+
+    private String remarks;
 }

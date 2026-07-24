@@ -2,29 +2,22 @@ package com.neusoft.nep.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 市级行政区域实体
+ * 市级区域（官方 nep.sql）
  */
 @Data
 @TableName("grid_city")
 public class GridCity {
 
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "city_id", type = IdType.AUTO)
+    private Integer cityId;
 
     private String cityName;
 
-    private String cityCode;
-
     private Integer provinceId;
 
-    /** 是否 106 大城市：1 是 / 0 否 */
-    private Integer isMajorCity;
-
-    @TableLogic
-    private Integer deleted;
+    private String remarks;
 }

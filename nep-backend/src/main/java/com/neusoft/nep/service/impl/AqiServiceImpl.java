@@ -19,6 +19,6 @@ public class AqiServiceImpl implements AqiService {
 
     @Override
     public List<Aqi> listLevels() {
-        return aqiMapper.selectList(new LambdaQueryWrapper<Aqi>().orderByAsc(Aqi::getLevel));
+        return aqiMapper.selectList(new LambdaQueryWrapper<Aqi>().orderByAsc(Aqi::getAqiId));
     }
 }

@@ -29,8 +29,11 @@ public class AqiFeedbackController {
         return R.success();
     }
 
+    /**
+     * @param supervisorId 监督员手机号（官方库 tel_id）
+     */
     @GetMapping("/myList")
-    public R myList(@RequestParam Integer supervisorId) {
+    public R myList(@RequestParam String supervisorId) {
         return R.success(aqiFeedbackService.myList(supervisorId));
     }
 }

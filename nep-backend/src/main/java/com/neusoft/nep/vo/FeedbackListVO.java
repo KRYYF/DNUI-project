@@ -1,12 +1,9 @@
 package com.neusoft.nep.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
- * 我的反馈列表项
+ * 我的反馈列表项（对外字段名保持 NEPS 前端约定）
  */
 @Data
 public class FeedbackListVO {
@@ -16,7 +13,7 @@ public class FeedbackListVO {
     private String detailAddress;
     private Integer estimatedLevel;
     private String feedbackDesc;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime feedbackTime;
+    private String feedbackTime;
+    /** 未指派 / 已指派 / 已确认 */
     private String status;
 }

@@ -1,8 +1,6 @@
 package com.neusoft.nep.controller;
 
 import com.neusoft.nep.common.R;
-import com.neusoft.nep.entity.GridCity;
-import com.neusoft.nep.entity.GridProvince;
 import com.neusoft.nep.service.RegionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +29,7 @@ public class RegionController {
     public R provinces() {
         List<Map<String, Object>> data = regionService.listProvinces().stream().map(p -> {
             Map<String, Object> item = new HashMap<>();
-            item.put("id", p.getId());
+            item.put("id", p.getProvinceId());
             item.put("provinceName", p.getProvinceName());
             return item;
         }).collect(Collectors.toList());
@@ -42,7 +40,7 @@ public class RegionController {
     public R cities(@PathVariable Integer provinceId) {
         List<Map<String, Object>> data = regionService.listCitiesByProvinceId(provinceId).stream().map(c -> {
             Map<String, Object> item = new HashMap<>();
-            item.put("id", c.getId());
+            item.put("id", c.getCityId());
             item.put("cityName", c.getCityName());
             item.put("provinceId", c.getProvinceId());
             return item;

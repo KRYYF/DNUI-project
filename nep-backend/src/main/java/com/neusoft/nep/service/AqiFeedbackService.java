@@ -12,5 +12,8 @@ public interface AqiFeedbackService {
 
     void submit(FeedbackSubmitDTO dto);
 
-    List<FeedbackListVO> myList(Integer supervisorId);
+    /**
+     * @param telId 监督员手机号（前端字段名仍传 supervisorId）
+     */
+    List<FeedbackListVO> myList(String telId);
 }

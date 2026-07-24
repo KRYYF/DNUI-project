@@ -24,7 +24,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public List<GridProvince> listProvinces() {
         return gridProvinceMapper.selectList(
-                new LambdaQueryWrapper<GridProvince>().orderByAsc(GridProvince::getId));
+                new LambdaQueryWrapper<GridProvince>().orderByAsc(GridProvince::getProvinceId));
     }
 
     @Override
@@ -32,6 +32,6 @@ public class RegionServiceImpl implements RegionService {
         return gridCityMapper.selectList(
                 new LambdaQueryWrapper<GridCity>()
                         .eq(GridCity::getProvinceId, provinceId)
-                        .orderByAsc(GridCity::getId));
+                        .orderByAsc(GridCity::getCityId));
     }
 }

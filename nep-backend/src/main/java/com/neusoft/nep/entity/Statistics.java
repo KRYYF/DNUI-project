@@ -1,19 +1,12 @@
 package com.neusoft.nep.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 /**
- * 实测统计数据实体
+ * 实测统计（官方 nep.sql）
  */
 @Data
 @TableName("statistics")
@@ -22,32 +15,35 @@ public class Statistics {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private Integer aqiFeedbackId;
+    private Integer provinceId;
 
-    private Integer gridMemberId;
+    private Integer cityId;
 
-    private BigDecimal so2Concentration;
+    private String address;
 
-    private Integer so2Iaqi;
+    private Integer so2Value;
 
-    private BigDecimal coConcentration;
+    private Integer so2Level;
 
-    private Integer coIaqi;
+    private Integer coValue;
 
-    private BigDecimal pm25Concentration;
+    private Integer coLevel;
 
-    private Integer pm25Iaqi;
+    private Integer spmValue;
 
-    /** 综合 AQI（取三项最大） */
-    private Integer totalAqi;
+    private Integer spmLevel;
 
-    /** 综合 AQI 等级 1-6 */
-    private Integer totalLevel;
+    private Integer aqiId;
 
-    @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime confirmTime;
+    private String confirmDate;
 
-    @TableLogic
-    private Integer deleted;
+    private String confirmTime;
+
+    private Integer gmId;
+
+    private String fdId;
+
+    private String information;
+
+    private String remarks;
 }

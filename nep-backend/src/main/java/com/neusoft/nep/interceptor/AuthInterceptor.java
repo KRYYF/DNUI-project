@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
- * Token 校验拦截器
+ * Token 校验拦截器（token 对应监督员手机号）
  */
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
@@ -23,14 +23,14 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
         String token = request.getHeader("Authorization");
-        Integer supervisorId = TokenUtil.getSupervisorId(token);
-        if (supervisorId == null) {
+        String telId = TokenUtil.getTelId(token);
+        if (telId == null) {
             response.setStatus(200);
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(objectMapper.writeValueAsString(R.error(401, "未授权，请先登录")));
             return false;
         }
-        request.setAttribute("supervisorId", supervisorId);
+        request.setAttribute("telId", telId);
         return true;
     }
 }
