@@ -167,13 +167,14 @@
       <span>项目周期：5 个工作日</span>
       <span>团队规模：4 人</span>
       <span>分工策略：按端切分 + 公共共建</span>
-      <span>工作包数：12 个</span>
+      <span>工作包数：13 个</span>
       <span>编制日期：2026-07-23</span>
+      <span>修订：2026-07-24（厘清 C/D 启动与全量边界）</span>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="label">工作包总数</div><div class="value">12</div></div>
+    <div class="stat"><div class="label">工作包总数</div><div class="value">13</div></div>
     <div class="stat"><div class="label">预计总工时</div><div class="value">80 h</div></div>
     <div class="stat"><div class="label">人均工时</div><div class="value">20 h</div></div>
     <div class="stat"><div class="label">工期</div><div class="value">5 天</div></div>
@@ -211,11 +212,18 @@
     <div class="note">
       <b>平衡说明：</b>管理员端业务最复杂（10+ 页面含指派逻辑），所以工时略多；公众监督员端和大屏端业务相对单一，工时略少。差异控制在 5h 以内。
     </div>
+    <div class="note">
+      <b>阶段边界（防重合）：</b>
+      <b>启动</b>=空壳能跑（工程/登录/代理/公共模板）；
+      <b>全量</b>=业务页 + 真实接口（含统计后端）；
+      <b>联调</b>=对数据格式、空数据、边界用例，<b>禁止再写一遍同名接口</b>。
+      每人只 scaffold 自己负责的端；公共 <code>request.js</code> 模板由 C 提供，A/B/D 复制后改端口。
+    </div>
   </div>
 
   <!-- 阶段一 -->
   <div class="card">
-    <h2>阶段一：D1 项目启动（上午建后端，下午建前端）</h2>
+    <h2>阶段一：D1 项目启动（上午建后端，下午各端脚手架）</h2>
     <div class="tasks">
 
       <div class="task shared">
@@ -290,37 +298,49 @@
       <div class="task p3">
         <div class="task-head">
           <span class="task-id">1.3</span>
-          <span class="task-title">前端工程 + Axios + 路由 + 登录</span>
+          <span class="task-title">NEPM 脚手架 + 公共 request 模板</span>
           <div class="task-meta">
-            <span class="task-owner owner-p3">C 主</span>
-            <span class="task-owner owner-p4">D 复核</span>
-            <span class="task-hours">2 h</span>
+            <span class="task-owner owner-p3">C</span>
+            <span class="task-hours">1.5 h</span>
             <span class="task-when">D1 下午</span>
           </div>
         </div>
         <div class="task-section">
-          <h4>具体动作</h4>
+          <h4>具体动作（只做空壳，不做业务页）</h4>
           <ul>
-            <li>Vue CLI 建 4 个工程 <code>nep-frontend-{neps,nepg,nepm,nepv}</code>，引入 Element Plus、Axios、Vue Router、Pinia</li>
-            <li>写 <code>src/utils/request.js</code>：Axios 实例 + 请求拦截器（带 token）+ 响应拦截器（401 跳登录）</li>
-            <li>写 <code>src/router/index.js</code>：路由表 + 全局 <code>beforeEach</code> 守卫（未登录跳登录、按角色拦截）</li>
-            <li>写 <code>src/store/user.js</code>：Pinia 管理 token 和用户信息，刷新从 localStorage 恢复</li>
-            <li>抽公共组件 <code>LoginForm.vue</code>：4 个端登录页共用，差异在接口和角色字段</li>
-            <li>配 <code>vue.config.js</code> devServer proxy：<code>/api</code> 代理到 <code>http://localhost:8080</code></li>
-            <li>4 个端各跑 <code>npm run serve</code> 验证能起，互不冲突</li>
-          </ul>
-        </div>
-        <div class="task-section">
-          <h4>登录页差异表</h4>
-          <ul>
-            <li>NEPS 公众监督员：手机号+密码 → <code>POST /api/supervisor/login</code></li>
-            <li>NEPG 网格员：登录编码+密码 → <code>POST /api/gridMember/login</code></li>
-            <li>NEPM 管理员：登录编码+密码 → <code>POST /api/admin/login</code></li>
-            <li>NEPV 大屏：登录编码+密码 → <code>POST /api/admin/login</code></li>
+            <li>建 <code>nep-frontend-nepm</code>（Vite/Vue CLI 均可），引入 UI 库、Axios、Vue Router、Pinia</li>
+            <li>抽出可复用模板：<code>request.js</code>（拦截器/token/401）+ 登录页骨架，群里共享给 A/B/D 复制</li>
+            <li>NEPM：路由守卫 + <code>user</code> store + 管理员登录页（调 <code>POST /api/admin/login</code> 或先 Mock）</li>
+            <li>配 proxy：端口 <b>8083</b>，<code>/api</code> → <code>8080</code></li>
+            <li><b>不做</b>：反馈列表/指派/统计图表（留给 2.C）</li>
           </ul>
         </div>
         <div class="deliverable">
-          <b>验收：</b>D1 下午 4 点前群里发"4 个前端跑起来，能调到后端 mock 接口"
+          <b>验收：</b>NEPM 能启动；登录页可打开；模板已发群。同步：A/B 各自 scaffold NEPS(8081)/NEPG(8082)
+        </div>
+      </div>
+
+      <div class="task p4">
+        <div class="task-head">
+          <span class="task-id">1.4</span>
+          <span class="task-title">NEPV 大屏脚手架</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p4">D</span>
+            <span class="task-hours">1.5 h</span>
+            <span class="task-when">D1 下午</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>具体动作（只做空壳，不做图表业务）</h4>
+          <ul>
+            <li>建 <code>nep-frontend-nepv</code>，复制 C 的 <code>request.js</code> 模板</li>
+            <li>登录页（管理员账号，走 <code>POST /api/admin/login</code>）+ 空白大屏路由占位</li>
+            <li>配 proxy：端口 <b>8084</b>；预装 ECharts 依赖即可，图表组件放到 2.D</li>
+            <li><b>不做</b>：地图/8 图表/KPI/5s 轮询（留给 2.D）</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>NEPV 能启动；登录后进入空白大屏页
         </div>
       </div>
 
@@ -434,44 +454,44 @@
             <span class="task-when">D3</span>
           </div>
         </div>
+        <div class="note" style="margin-top:0;">
+          <b>与 1.3 的边界：</b>登录页沿用启动脚手架，本任务从「后台布局」起做业务；
+          <b>统计 4 接口必须在 D3 内写完</b>（不要拖到 3.1），否则大屏 D 无法联调。
+        </div>
         <div class="task-section">
-          <h4>页面清单（8 个）</h4>
+          <h4>页面清单（登录已完成，本包 7 项业务）</h4>
           <ul>
-            <li><b>登录页 + 后台布局</b>：左侧导航 + 头部用户信息 + OUT 退出按钮</li>
-            <li><b>公众监督反馈列表</b>：多条件查询（省/市/AQI 等级/状态）+ 分页 + 指派单选（未指派/已指派）</li>
-            <li><b>反馈详情</b>：展示监督员反馈的所有信息</li>
+            <li><b>后台布局</b>：左侧导航 + 头部用户信息 + OUT 退出（登录页不再计入本包）</li>
+            <li><b>公众监督反馈列表</b>：多条件查询（省/市/AQI 等级/状态）+ 分页 + 未指派/已指派筛选</li>
+            <li><b>反馈详情</b>：展示监督员反馈全部信息</li>
             <li><b>指派网格员页</b>：本地优先，无则异地就近；含本地/异地切换开关</li>
-            <li><b>AQI 确认数据列表</b>：看网格员提交的实测 AQI，支持查询分页</li>
-            <li><b>统计 1 - 省分组超标累计</b>：按省聚合 SO2/PM2.5/CO/AQI 超标次数</li>
-            <li><b>统计 2 - AQI 分布 + 趋势</b>：饼图（等级分布）+ 折线图（12 个月趋势）</li>
-            <li><b>统计 3 - 网格覆盖率</b>：省/大城市网格覆盖率（仪表盘）</li>
+            <li><b>实测确认列表</b>：网格员提交的实测数据，查询分页</li>
+            <li><b>统计页</b>：省分组超标 / AQI 分布+趋势 / 网格覆盖率（接真实接口）</li>
           </ul>
         </div>
         <div class="task-section">
-          <h4>对应后端接口</h4>
+          <h4>对应后端接口（D3 当天交付，供 D 复用）</h4>
           <ul>
-            <li><code>POST /api/admin/login</code></li>
-            <li><code>POST /api/aqiFeedback/pageQuery</code>（多条件 + 分页）</li>
-            <li><code>GET /api/aqiFeedback/detail/{id}</code></li>
-            <li><code>GET /api/gridMember/byRegion?provinceId=&cityId=</code></li>
-            <li><code>POST /api/aqiFeedback/assign</code>（含本地/异地标识）</li>
-            <li><code>POST /api/aqiConfirm/pageQuery</code></li>
-            <li><code>GET /api/statistics/provinceExceed</code></li>
-            <li><code>GET /api/statistics/aqiDistribution</code> <code>GET /api/statistics/aqiTrend</code></li>
-            <li><code>GET /api/statistics/gridCoverage</code></li>
+            <li><code>POST /api/aqiFeedback/pageQuery</code>、<code>GET /api/aqiFeedback/detail/{id}</code></li>
+            <li><code>GET /api/gridMember/byRegion</code>、<code>POST /api/aqiFeedback/assign</code></li>
+            <li><code>POST /api/statistics/.../pageQuery</code> 或实测列表查询（按官方表 <code>statistics</code>）</li>
+            <li><b>统计（必须当天完成）：</b>
+              <code>GET /api/statistics/provinceExceed</code>、
+              <code>/aqiDistribution</code>、<code>/aqiTrend</code>、<code>/gridCoverage</code>、
+              <code>/realTimeCount</code>
+            </li>
           </ul>
         </div>
         <div class="task-section">
-          <h4>指派逻辑要点</h4>
+          <h4>指派逻辑要点（对齐官方库字段）</h4>
           <ul>
-            <li>查询条件：当前任务的 provinceId + cityId</li>
-            <li>查 <code>grid_member</code> 表中 <code>provinceId=curr.provinceId AND cityId=curr.cityId AND status='工作'</code> 的网格员</li>
-            <li>有 → 本地指派；无 → 开关打开显示异地表单，可选其它省市的网格员</li>
-            <li>提交后更新 <code>aqi_feedback</code> 的 <code>assignedGridMemberId</code> 和 <code>assignType</code></li>
+            <li>按反馈的 <code>province_id</code> + <code>city_id</code> 查工作状态网格员（<code>grid_member.state=0</code>）</li>
+            <li>有 → 本地指派；无 → 异地选择其它省市网格员</li>
+            <li>更新 <code>aqi_feedback.gm_id / assign_date / assign_time / state</code>（0→1）</li>
           </ul>
         </div>
         <div class="deliverable">
-          <b>验收：</b>D3 晚上群里发截图：完整跑通登录→查询反馈→指派网格员（含异地切换）→看 4 个统计
+          <b>验收：</b>D3 晚上：登录→查反馈→指派（含异地）→统计页有真实数据；统计 API 可被 Apifox 调通
         </div>
       </div>
 
@@ -482,8 +502,12 @@
           <div class="task-meta">
             <span class="task-owner owner-p4">D</span>
             <span class="task-hours">6 h</span>
-            <span class="task-when">D3-D4</span>
+            <span class="task-when">D3 晚-D4 午</span>
           </div>
+        </div>
+        <div class="note" style="margin-top:0;">
+          <b>与 1.4 的边界：</b>登录与空白页已完成；本包只做布局/地图/图表/轮询。
+          <b>依赖：</b>C 在 D3 交付的统计接口；D3 白天可用 Mock，D3 晚起切真实接口。
         </div>
         <div class="task-section">
           <h4>页面清单（1 个大屏）</h4>
@@ -504,27 +528,22 @@
           </ul>
         </div>
         <div class="task-section">
-          <h4>对应后端接口（复用 C 的统计接口）</h4>
+          <h4>对接接口（复用 C，本包不写后端）</h4>
           <ul>
-            <li><code>GET /api/statistics/provinceExceed</code>（4 个柱状图）</li>
-            <li><code>GET /api/statistics/aqiDistribution</code>（饼图）</li>
-            <li><code>GET /api/statistics/aqiTrend</code>（折线图）</li>
-            <li><code>GET /api/statistics/gridCoverage</code>（2 个仪表盘）</li>
-            <li><code>GET /api/statistics/realTimeCount</code>（3 个 KPI）</li>
+            <li><code>GET /api/statistics/provinceExceed</code>、<code>/aqiDistribution</code>、<code>/aqiTrend</code></li>
+            <li><code>GET /api/statistics/gridCoverage</code>、<code>/realTimeCount</code></li>
           </ul>
         </div>
         <div class="task-section">
           <h4>技术要点</h4>
           <ul>
-            <li>用 ECharts 5.x，图表封装为可复用组件 <code>BarChart.vue</code> <code>PieChart.vue</code> 等</li>
-            <li>中国地图用 <code>echarts/charts/map</code> + 中国地图 JSON（chinaMap.json）</li>
-            <li>地图上根据省超标数据高亮颜色</li>
-            <li><code>setInterval</code> 每 5 秒调用 5 个接口，更新所有图表</li>
-            <li>适配：1920×1080 为主，缩放 80%-120% 也能看</li>
+            <li>ECharts 封装 <code>BarChart.vue</code> / <code>PieChart.vue</code> 等</li>
+            <li>中国地图 JSON + 按省超标高亮</li>
+            <li><code>setInterval</code> 每 5 秒刷新；注意组件销毁时 <code>clearInterval</code></li>
           </ul>
         </div>
         <div class="deliverable">
-          <b>验收：</b>D4 中午群里发大屏截图，地图+8 图表+3 KPI 都有数据，5 秒后数据自动刷新
+          <b>验收：</b>D4 中午：地图+8 图表+3 KPI 有真实数据，5 秒自动刷新
         </div>
       </div>
 
@@ -539,7 +558,7 @@
       <div class="task p3">
         <div class="task-head">
           <span class="task-id">3.1</span>
-          <span class="task-title">后端接口打通（统计 + 大屏）</span>
+          <span class="task-title">统计/大屏联调与边界用例</span>
           <div class="task-meta">
             <span class="task-owner owner-p3">C</span>
             <span class="task-owner owner-p4">D</span>
@@ -547,17 +566,21 @@
             <span class="task-when">D4 下午</span>
           </div>
         </div>
+        <div class="note" style="margin-top:0;">
+          <b>与 2.C / 2.D 的边界：</b>统计接口与大屏图表应已在全量阶段完成。
+          本包<b>禁止重写同名接口/重做图表</b>，只做联调、格式对齐与边界兜底。
+        </div>
         <div class="task-section">
           <h4>具体动作</h4>
           <ul>
-            <li>C 优先完成 4 个统计接口的 SQL 和 Service：省分组聚合、AQI 分布、趋势、覆盖率</li>
-            <li>D 同时调通大屏的 5 个接口调用，确保数据格式对得上 ECharts</li>
-            <li>RealTimeCount 接口单独写：查 <code>aqi_confirm</code> 表的总数、良好数、污染数</li>
-            <li>联调前在 Apifox 测一遍每个接口的边界：空数据、跨年查询、单省无数据</li>
+            <li>C：Apifox 回归统计接口边界（空库、单省无数据、跨月）；修 bug，不新开接口</li>
+            <li>D：核对 ECharts 字段映射；空数据占位；轮询启停与内存泄漏检查</li>
+            <li>双方对齐响应结构（数组/对象、字段驼峰），改一边同步更新 <code>docs/api-list.md</code></li>
+            <li>必要时补 <code>realTimeCount</code> 小修复（若 2.C 已交付则只修不重写）</li>
           </ul>
         </div>
         <div class="deliverable">
-          <b>验收：</b>D4 下午 5 点前大屏能在本地跑起来，所有图表有数据
+          <b>验收：</b>D4 下午 5 点前：大屏全图有数据或优雅空态；边界用例有记录
         </div>
       </div>
 
@@ -697,8 +720,9 @@
     <ul style="padding-left:22px;line-height:1.9;">
       <li><b>每日站会</b>：开工前 5 分钟群里发"今日交付"，截图打卡</li>
       <li><b>分支策略</b>：每人 feature 分支，每日 merge 到 main 一次</li>
-      <li><b>接口契约</b>：D1 上午清单签字后所有人按清单写，不私自改字段</li>
-      <li><b>联调负责人</b>：C（管理员端是业务中枢，所有端都与其对接）</li>
+      <li><b>接口契约</b>：以 <code>docs/api-list.md</code> + 官方 <code>nep.sql</code> 为准，不私自改字段</li>
+      <li><b>联调负责人</b>：C（管理员端是业务中枢；统计接口由 C 在 D3 交付）</li>
+      <li><b>防重合</b>：启动不做业务页；全量做完真实接口；联调阶段不重写同名接口</li>
       <li><b>卡点处理</b>：卡 30 分钟直接在群里喊，别自己死磕</li>
     </ul>
   </div>
@@ -709,12 +733,13 @@
 const ganttData = [
   { name: 'D1 上午 需求拆解', start: 1, end: 1, owner: '公共' },
   { name: 'D1 上午 后端工程+SQL', start: 1, end: 1, owner: 'A' },
-  { name: 'D1 下午 前端工程+登录', start: 1, end: 1, owner: 'C' },
+  { name: 'D1 下午 NEPM脚手架+模板', start: 1, end: 1, owner: 'C' },
+  { name: 'D1 下午 NEPV脚手架', start: 1, end: 1, owner: 'D' },
   { name: 'D2 NEPS公众监督员端', start: 2, end: 2, owner: 'A' },
   { name: 'D2 NEPG网格员端', start: 2, end: 2, owner: 'B' },
-  { name: 'D3 NEPM管理员端', start: 3, end: 3, owner: 'C' },
-  { name: 'D3-D4 NEPV大屏端', start: 3, end: 4, owner: 'D' },
-  { name: 'D4 下午 接口打通', start: 4, end: 4, owner: 'C' },
+  { name: 'D3 NEPM全量(含统计API)', start: 3, end: 3, owner: 'C' },
+  { name: 'D3-D4 NEPV大屏全量', start: 3, end: 4, owner: 'D' },
+  { name: 'D4 下午 联调与边界', start: 4, end: 4, owner: 'C' },
   { name: 'D5 上午 端到端联调', start: 5, end: 5, owner: '公共' },
   { name: 'D5 下午 Bug修复+验收', start: 5, end: 5, owner: '公共' },
 ];
@@ -761,11 +786,11 @@ wpChart.setOption({
   series: [{
     type: 'bar', barWidth: 40,
     data: [
-      { value: 1, itemStyle:{color:'#1976d2'} },
-      { value: 1, itemStyle:{color:'#388e3c'} },
-      { value: 2, itemStyle:{color:'#f57c00'} },
-      { value: 1, itemStyle:{color:'#7b1fa2'} },
-      { value: 7, itemStyle:{color:'#607d8b'} },
+      { value: 2, itemStyle:{color:'#1976d2'} },
+      { value: 2, itemStyle:{color:'#388e3c'} },
+      { value: 3, itemStyle:{color:'#f57c00'} },
+      { value: 2, itemStyle:{color:'#7b1fa2'} },
+      { value: 4, itemStyle:{color:'#607d8b'} },
     ],
     label: { show: true, position: 'top' }
   }]
