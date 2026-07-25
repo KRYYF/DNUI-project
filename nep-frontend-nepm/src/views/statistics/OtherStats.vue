@@ -107,10 +107,10 @@ function makeGaugeOption(value) {
       axisLine: {
         lineStyle: {
           width: 20,
-          color: [[0.3, '#F56C6C'], [0.7, '#E6A23C'], [1, '#67C23A']],
+          color: [[0.3, '#EF5350'], [0.7, '#FFB74D'], [1, '#66BB6A']],
         },
       },
-      pointer: { length: '60%', width: 8, itemStyle: { color: 'auto' } },
+      pointer: { length: '60%', width: 8, itemStyle: { color: '#43A047' } },
       axisTick: { distance: -20, length: 6 },
       splitLine: { distance: -25, length: 16 },
       axisLabel: { distance: 30, fontSize: 12 },
@@ -119,6 +119,7 @@ function makeGaugeOption(value) {
         formatter: '{value}%',
         fontSize: 24,
         offsetCenter: [0, '75%'],
+        color: '#2E7D32',
       },
       data: [{ value: value || 0 }],
     }],
@@ -140,14 +141,33 @@ function renderCityGauge(data) {
 
 <style scoped>
 .page { max-width: 1300px; }
-.page-header h3 { margin: 0 0 16px; }
+.page-header {
+  margin-bottom: 20px;
+}
+.page-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: 1px;
+}
+.page :deep(.el-card) {
+  border-radius: 14px;
+  border: 1px solid #eef3ee;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+.page :deep(.el-card__header) {
+  font-weight: 600;
+  color: #1a1a2e;
+  border-bottom: 1px solid #eef3ee;
+}
 .count-body { display: flex; justify-content: space-around; padding: 20px 0; }
 .count-item { text-align: center; }
-.count-num { font-size: 36px; font-weight: 700; line-height: 1.2; }
-.count-num.total { color: #409EFF; }
-.count-num.assigned { color: #E6A23C; }
-.count-num.confirmed { color: #67C23A; }
+.count-num { font-size: 40px; font-weight: 800; line-height: 1.2; }
+.count-num.total { color: #43A047; }
+.count-num.assigned { color: #FF9800; }
+.count-num.confirmed { color: #F44336; }
 .count-label { font-size: 14px; color: #909399; margin-top: 8px; }
 .gauge-chart { width: 100%; height: 250px; }
-.coverage-text { text-align: center; margin-top: 4px; color: #606266; font-size: 14px; }
+.coverage-text { text-align: center; margin-top: 4px; color: #606266; font-size: 14px; font-weight: 500; }
 </style>

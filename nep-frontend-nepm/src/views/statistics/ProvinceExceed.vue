@@ -67,10 +67,26 @@ function renderChart(data) {
     },
     yAxis: { type: 'value', name: '超标累计数量' },
     series: [
-      { name: 'SO₂超标', type: 'bar', data: data.map((d) => d.so2Exceed), itemStyle: { color: '#409EFF' } },
-      { name: 'CO超标', type: 'bar', data: data.map((d) => d.coExceed), itemStyle: { color: '#67C23A' } },
-      { name: 'PM2.5超标', type: 'bar', data: data.map((d) => d.pm25Exceed), itemStyle: { color: '#E6A23C' } },
-      { name: 'AQI超标', type: 'bar', data: data.map((d) => d.aqiExceed), itemStyle: { color: '#F56C6C' } },
+      {
+        name: 'SO₂超标', type: 'bar', data: data.map((d) => d.so2Exceed),
+        itemStyle: { color: '#66BB6A' },
+        emphasis: { itemStyle: { color: '#43A047' } },
+      },
+      {
+        name: 'CO超标', type: 'bar', data: data.map((d) => d.coExceed),
+        itemStyle: { color: '#81C784' },
+        emphasis: { itemStyle: { color: '#4CAF50' } },
+      },
+      {
+        name: 'PM2.5超标', type: 'bar', data: data.map((d) => d.pm25Exceed),
+        itemStyle: { color: '#A5D6A7' },
+        emphasis: { itemStyle: { color: '#66BB6A' } },
+      },
+      {
+        name: 'AQI超标', type: 'bar', data: data.map((d) => d.aqiExceed),
+        itemStyle: { color: '#EF5350' },
+        emphasis: { itemStyle: { color: '#D32F2F' } },
+      },
     ],
   }
   chartInstance.setOption(option)
@@ -79,7 +95,26 @@ function renderChart(data) {
 
 <style scoped>
 .page { max-width: 1300px; }
-.page-header h3 { margin: 0 0 16px; }
-.chart-card { margin-bottom: 16px; }
+.page-header {
+  margin-bottom: 20px;
+}
+.page-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: 1px;
+}
+.chart-card {
+  margin-bottom: 16px;
+  border-radius: 14px;
+  border: 1px solid #eef3ee;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+.table-card {
+  border-radius: 14px;
+  border: 1px solid #eef3ee;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
 .chart { width: 100%; height: 400px; }
 </style>

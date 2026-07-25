@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d9901eec-b3fc-45fa-bbe1-0da0800813ca" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/NEPS公众监督员端AI提示词.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/界面原型图/nepg（网格员端）/feedbackinfo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/界面原型图/nepg（网格员端）/feedbacklist.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/界面原型图/nepg（网格员端）/login.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/界面原型图/neps（公众监督员端）/feedbacklist.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/界面原型图/neps（公众监督员端）/login.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/界面原型图/neps（公众监督员端）/register.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/界面原型图/neps（公众监督员端）/selectaqi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/界面原型图/neps（公众监督员端）/selectgrid.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/api-list.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api-list.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nep-backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/nep-backend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-nepm/src/views/statistics/AqiTrend.vue" beforeDir="false" afterPath="$PROJECT_DIR$/nep-frontend-nepm/src/views/statistics/AqiTrend.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-nepm/src/views/statistics/OtherStats.vue" beforeDir="false" afterPath="$PROJECT_DIR$/nep-frontend-nepm/src/views/statistics/OtherStats.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-nepm/src/views/statistics/ProvinceExceed.vue" beforeDir="false" afterPath="$PROJECT_DIR$/nep-frontend-nepm/src/views/statistics/ProvinceExceed.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/public/favicon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/public/icons.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/App.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/api/aqi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/api/feedback.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/api/region.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/api/supervisor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/assets/hero.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/assets/vite.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/assets/vue.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/components/HelloWorld.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/components/NavBar.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/router/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/store/user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/utils/aqi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/utils/request.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/views/Feedback.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/views/HistoryList.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/views/Login.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/views/Register.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/src/views/SelectGrid.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/nep-frontend-neps/vite.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wbs.html" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="3GykdaQSaGIzrZdajE4MJe47Jdn" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/Camellia/Desktop/东软实训/neuesoft/DNUI-project-1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="d9901eec-b3fc-45fa-bbe1-0da0800813ca" name="更改" comment="" />
+      <created>1784951284230</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1784951284230</updated>
+      <workItem from="1784951285361" duration="685000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

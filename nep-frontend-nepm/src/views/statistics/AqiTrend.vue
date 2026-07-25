@@ -61,18 +61,18 @@ function renderChart(data) {
       type: 'line',
       data: data.exceedCounts || data.values || [],
       smooth: true,
-      lineStyle: { color: '#F56C6C', width: 3 },
-      itemStyle: { color: '#F56C6C' },
+      lineStyle: { color: '#43A047', width: 3 },
+      itemStyle: { color: '#43A047' },
       areaStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: 'rgba(245, 108, 108, 0.3)' },
-          { offset: 1, color: 'rgba(245, 108, 108, 0.05)' },
+          { offset: 0, color: 'rgba(67, 160, 71, 0.3)' },
+          { offset: 1, color: 'rgba(67, 160, 71, 0.03)' },
         ]),
       },
       markLine: {
         silent: true,
         data: [{ type: 'average', name: '平均值' }],
-        lineStyle: { color: '#409EFF', type: 'dashed' },
+        lineStyle: { color: '#FF9800', type: 'dashed' },
       },
     }],
   }
@@ -82,6 +82,20 @@ function renderChart(data) {
 
 <style scoped>
 .page { max-width: 1100px; }
-.page-header h3 { margin: 0 0 16px; }
+.page-header {
+  margin-bottom: 20px;
+}
+.page-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: 1px;
+}
+.page :deep(.el-card) {
+  border-radius: 14px;
+  border: 1px solid #eef3ee;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
 .chart { width: 100%; height: 400px; }
 </style>
