@@ -25,7 +25,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/test/**",
                         "/api/supervisor/register",
                         "/api/supervisor/checkPhone",
-                        "/api/supervisor/login"
+                        "/api/supervisor/login",
+                        "/api/admin/login",
+                        "/api/statistics/**"
                 );
     }
 }

@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #0d1a33;
+  color: #e8ecf2;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+:root {
+  --primary: #1e88e5;
+  --primary-dark: #1565c0;
+  --bg-dark: #0a0e27;
+  --bg-card: rgba(20, 30, 60, 0.6);
+  --border: rgba(30, 136, 229, 0.3);
+  --text-primary: #e0e6ed;
+  --text-secondary: #8ea4c7;
+  --accent: #00e5ff;
+  --success: #00e676;
+  --warning: #ffb300;
+  --danger: #ff5252;
+}
