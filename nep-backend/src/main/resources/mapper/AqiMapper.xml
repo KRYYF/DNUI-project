@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.nep.mapper.AqiMapper">
+
+    <select id="matchAqiLevel" resultType="com.neusoft.nep.entity.Aqi">
+        SELECT * FROM aqi
+        WHERE so2_min &lt;= #{so2} AND #{so2} &lt;= so2_max
+        AND co_min &lt;= #{co} AND #{co} &lt;= co_max
+        AND spm_min &lt;= #{spm} AND #{spm} &lt;= spm_max
+        LIMIT 1
+    </select>
+
+</mapper>

@@ -1,19 +1,11 @@
 package com.neusoft.nep.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.neusoft.nep.entity.AqiFeedback;
 import com.neusoft.nep.dto.FeedbackSubmitDTO;
-import com.neusoft.nep.vo.FeedbackListVO;
 
-import java.util.List;
-
-/**
- * 反馈业务
- */
-public interface AqiFeedbackService {
-
+public interface AqiFeedbackService extends IService<AqiFeedback> {
+    // 保留原有业务方法，兼容组长代码
     void submit(FeedbackSubmitDTO dto);
-
-    /**
-     * @param telId 监督员手机号（前端字段名仍传 supervisorId）
-     */
-    List<FeedbackListVO> myList(String telId);
+    Object myList(String supervisorId);
 }

@@ -33,6 +33,23 @@ const routes = [
     component: () => import('../views/HistoryList.vue'),
     meta: { requiresAuth: true },
   },
+
+  // ========== 新增网格员路由（你新建在 views/grid 目录）==========
+  {
+    path: '/gridLogin',
+    name: 'GridLogin',
+    component: () => import('../views/grid/GridLogin.vue')
+  },
+  {
+    path: '/taskList',
+    name: 'TaskList',
+    component: () => import('../views/grid/TaskList.vue')
+  },
+  {
+    path: '/taskDetail',
+    name: 'TaskDetail',
+    component: () => import('../views/grid/TaskDetail.vue')
+  }
 ]
 
 const router = createRouter({
