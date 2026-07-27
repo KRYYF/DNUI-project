@@ -2,18 +2,21 @@ package com.neusoft.nep.service;
 
 import com.neusoft.nep.dto.FeedbackSubmitDTO;
 import com.neusoft.nep.vo.FeedbackListVO;
+import com.neusoft.nep.vo.FeedbackDetailVO;
+import com.neusoft.nep.vo.PageVO;
 
 import java.util.List;
+import java.util.Map;
 
-/**
- * 反馈业务
- */
 public interface AqiFeedbackService {
 
     void submit(FeedbackSubmitDTO dto);
 
-    /**
-     * @param telId 监督员手机号（前端字段名仍传 supervisorId）
-     */
     List<FeedbackListVO> myList(String telId);
+
+    PageVO<FeedbackListVO> pageQuery(Map<String, Object> params);
+
+    FeedbackDetailVO detail(Integer id);
+
+    void assign(Integer feedbackId, Integer gmId);
 }

@@ -27,7 +27,7 @@
 | 反馈 | `af_id`、`tel_id`、`address`、`information`、`estimated_grade` | `af_date`/`af_time`；`state`：0未指派 / 1已指派 / 2已确认 |
 | 网格员 | `gm_id`、`gm_code`、`gm_name`、`tel`、`state` | |
 | 管理员 | `admin_id`、`admin_code` | |
-| 统计 | `so2_value/level`、`co_value/level`、`spm_value/level`、`aqi_id`、`gm_id`、`fd_id` | |
+| 统计 | `so2_value/level`、`co_value/level`、`spm_value/level`、`aqi_id`、`gm_id`、`af_id`、`fd_id` | `af_id`=关联反馈单号（稳定关联键）；`fd_id`=监督员电话 |
 
 - **API 映射层**：NEPS 等前端可用友好字段名（如 `detailAddress`→写 `address`），但必须以 `docs/api-list.md` 对照表为准，禁止两边各写一套
 
@@ -212,6 +212,12 @@ AQI_LEVEL = MAX(SO2_LEVEL, CO_LEVEL, SPM_LEVEL)
 - 发现 3：前端仍用 `supervisorId` 字段名，值为手机号字符串；AQI/反馈对外做映射层
 - 已确认：数据库权威 = `nep.sql`；接口权威 = `docs/api-list.md`
 - **本条补充**：已回写第 1/3/4/5 节硬约束，废弃脚手架字段约定与 MD5 密码约定，AQI 限值表改为与官方 `aqi` 表一致
+
+## [2026-07-27] statistics 增加 af_id 稳定关联
+- 发现 1：反馈详情关联实测不可用 `fd_id+information`（易串单）；应使用 `statistics.af_id = aqi_feedback.af_id`
+- 发现 2：外部 Navicat 导出（nep 2.sql）曾出现 `grid_city` 空表；权威库必须保留完整 city 种子数据
+- 发现 3：历史 seed 中部分 `statistics.fd_id` 与同地址反馈的 `tel_id` 不一致，回填 `af_id` 优先按 `address(+information)` 匹配
+- 已确认：网格员提交实测时必须写 `af_id`（反馈单号）+ `fd_id`（监督员电话）+ `spm_value`
 
 ---
 
