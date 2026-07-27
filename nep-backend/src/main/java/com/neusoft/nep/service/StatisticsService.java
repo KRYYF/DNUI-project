@@ -7,6 +7,9 @@ import com.neusoft.nep.vo.StatisticsListVO;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 统计服务接口（PR#1：保留完整方法集，PR#2 在此基础上扩展）
+ */
 public interface StatisticsService {
 
     List<Map<String, Object>> getProvinceExceed();

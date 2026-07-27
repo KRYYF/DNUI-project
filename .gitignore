@@ -1,0 +1,33 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build & Package
+target/
+build/
+dist/
+*.class
+*.jar
+*.war
+
+# Dependencies
+node_modules/
+
+# npm/yarn cache (avoid large push payload)
+.npm-cache/
+.npm/
+.yarn-cache/
+.cache/
+%USERPROFILE%/
+
+# META-INF (IDE/manifest artifacts not for source)
+META-INF/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db

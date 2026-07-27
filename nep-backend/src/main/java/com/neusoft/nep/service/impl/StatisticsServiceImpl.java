@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * 统计服务实现（PR#1：保留完整统计方法，PR#2 可在此之上扩展性能优化/缓存）
+ */
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
 

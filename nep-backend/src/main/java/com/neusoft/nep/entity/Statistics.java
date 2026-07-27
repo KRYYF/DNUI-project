@@ -41,6 +41,8 @@ public class Statistics {
 
     private Integer gmId;
 
+    private Integer afId;
+
     private String fdId;
 
     private String information;

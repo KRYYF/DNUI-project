@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 网格员控制器（PR#1：统一 /api/gridMember/** 路径空间；
+ * PR#2 计划扩展：登录 /login、任务列表 /tasks、实测提交 /submit）
+ */
 @RestController
 @RequestMapping("/api/gridMember")
 public class GridMemberController {

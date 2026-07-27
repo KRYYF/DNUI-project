@@ -27,7 +27,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/supervisor/checkPhone",
                         "/api/supervisor/login",
                         "/api/admin/login",
-                        "/api/statistics/**"
+                        // 大屏只读接口放行（PR#1 review）
+                        "/api/statistics/provinceExceed",
+                        "/api/statistics/aqiDistribution",
+                        "/api/statistics/aqiTrend",
+                        "/api/statistics/realTimeCount",
+                        "/api/statistics/gridCoverage"
                 );
     }
 }

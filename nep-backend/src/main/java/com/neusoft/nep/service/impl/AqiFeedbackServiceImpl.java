@@ -204,10 +204,10 @@ public class AqiFeedbackServiceImpl implements AqiFeedbackService {
         }
 
         if (item.getState() == 2) {
+            // 使用反馈单号 afId 作为稳定关联键（PR#1 review）
             Statistics stat = statisticsMapper.selectOne(
                     new LambdaQueryWrapper<Statistics>()
-                            .eq(Statistics::getFdId, item.getTelId())
-                            .eq(Statistics::getInformation, item.getInformation())
+                            .eq(Statistics::getAfId, item.getAfId())
                             .last("LIMIT 1")
             );
             if (stat != null) {
