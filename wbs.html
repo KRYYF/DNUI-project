@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>东软环保公众监督系统 - WBS 工作分解与任务分配</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f7fa; color: #2c3e50; line-height: 1.6;
+    padding: 32px 16px;
+  }
+  .container { max-width: 1320px; margin: 0 auto; }
+  .header {
+    background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+    color: #fff; padding: 36px 40px; border-radius: 12px;
+    margin-bottom: 24px; box-shadow: 0 4px 16px rgba(30,136,229,.2);
+  }
+  .header h1 { font-size: 28px; margin-bottom: 8px; }
+  .header .meta { font-size: 14px; opacity: .9; }
+  .header .meta span { margin-right: 24px; }
+
+  .card {
+    background: #fff; border-radius: 12px; padding: 28px;
+    margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+  .card h2 {
+    font-size: 20px; color: #1565c0; padding-bottom: 12px;
+    margin-bottom: 20px; border-bottom: 2px solid #e3f2fd;
+  }
+
+  .strategy {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 16px;
+  }
+  .persona {
+    border-radius: 10px; padding: 18px; color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .persona.p1 { background: linear-gradient(135deg,#42a5f5,#1976d2); }
+  .persona.p2 { background: linear-gradient(135deg,#66bb6a,#388e3c); }
+  .persona.p3 { background: linear-gradient(135deg,#ffa726,#f57c00); }
+  .persona.p4 { background: linear-gradient(135deg,#ab47bc,#7b1fa2); }
+  .persona .role { font-size: 13px; opacity: .9; }
+  .persona .name { font-size: 22px; font-weight: 700; margin: 6px 0; }
+  .persona .scope { font-size: 13px; line-height: 1.5; opacity: .95; }
+  .persona .hours {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,.3);
+    font-size: 12px;
+  }
+  .persona .hours b { font-size: 18px; }
+
+  /* 任务卡片网格 */
+  .tasks {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .task {
+    border: 1px solid #e0e6ed; border-radius: 10px;
+    padding: 18px; background: #fafbfc;
+    border-left: 5px solid #1e88e5;
+  }
+  .task.p1 { border-left-color: #1976d2; }
+  .task.p2 { border-left-color: #388e3c; }
+  .task.p3 { border-left-color: #f57c00; }
+  .task.p4 { border-left-color: #7b1fa2; }
+  .task.shared { border-left-color: #607d8b; background: #f5f5f5; }
+
+  .task-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; padding-bottom: 10px;
+    border-bottom: 1px dashed #cfd8dc;
+  }
+  .task-id { font-family: monospace; font-size: 13px; color: #607d8b; font-weight: 600; }
+  .task-title { font-size: 16px; font-weight: 700; color: #263238; flex: 1; margin: 0 10px; }
+  .task-meta { display: flex; gap: 8px; align-items: center; font-size: 12px; }
+  .task-owner {
+    padding: 3px 10px; border-radius: 4px; font-size: 11px;
+    font-weight: 600; color: #fff;
+  }
+  .owner-p1 { background: #1976d2; }
+  .owner-p2 { background: #388e3c; }
+  .owner-p3 { background: #f57c00; }
+  .owner-p4 { background: #7b1fa2; }
+  .owner-shared { background: #607d8b; }
+  .task-hours { background: #fff; border: 1px solid #cfd8dc; padding: 2px 8px; border-radius: 4px; }
+  .task-when { color: #78909c; }
+
+  .task-section { margin-top: 10px; }
+  .task-section h4 {
+    font-size: 13px; color: #455a64; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .task-section h4::before {
+    content: ''; display: inline-block; width: 3px; height: 12px;
+    background: #1e88e5; border-radius: 2px;
+  }
+  .task-section ul {
+    list-style: none; padding-left: 0; font-size: 13px;
+    color: #455a64;
+  }
+  .task-section ul li {
+    padding: 3px 0 3px 16px; position: relative;
+  }
+  .task-section ul li::before {
+    content: '·'; position: absolute; left: 4px; color: #1e88e5;
+    font-weight: bold;
+  }
+  .task-section code {
+    background: #eceff1; padding: 1px 5px; border-radius: 3px;
+    font-size: 12px; color: #c62828; font-family: monospace;
+  }
+
+  .deliverable {
+    margin-top: 10px; padding: 8px 12px;
+    background: #e8f5e9; border-radius: 6px;
+    font-size: 12px; color: #2e7d32;
+  }
+  .deliverable b { color: #1b5e20; }
+
+  .chart-box { height: 380px; margin-top: 16px; }
+  .chart-box-small { height: 280px; margin-top: 16px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat {
+    background: #fff; border-radius: 10px; padding: 16px;
+    border-left: 4px solid #1e88e5;
+  }
+  .stat .label { font-size: 12px; color: #78909c; }
+  .stat .value { font-size: 24px; font-weight: 700; color: #1565c0; margin-top: 4px; }
+
+  .note {
+    background: #fff8e1; border-left: 4px solid #ffb300;
+    padding: 12px 16px; border-radius: 6px; font-size: 13px;
+    margin: 12px 0;
+  }
+  .note b { color: #e65100; }
+
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px;
+    margin-top: 8px;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 4px; }
+  .legend i {
+    width: 12px; height: 12px; border-radius: 2px; display: inline-block;
+  }
+
+  @media (max-width: 900px) {
+    .strategy, .stats { grid-template-columns: 1fr 1fr; }
+    .tasks { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>东软环保公众监督系统 - WBS 工作分解与任务分配（扩写版）</h1>
+    <div class="meta">
+      <span>项目周期：5 个工作日</span>
+      <span>团队规模：4 人</span>
+      <span>分工策略：按端切分 + 公共共建</span>
+      <span>工作包数：13 个</span>
+      <span>编制日期：2026-07-23</span>
+      <span>修订：2026-07-24（厘清 C/D 启动与全量边界）</span>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">工作包总数</div><div class="value">13</div></div>
+    <div class="stat"><div class="label">预计总工时</div><div class="value">80 h</div></div>
+    <div class="stat"><div class="label">人均工时</div><div class="value">20 h</div></div>
+    <div class="stat"><div class="label">工期</div><div class="value">5 天</div></div>
+  </div>
+
+  <div class="card">
+    <h2>分工策略</h2>
+    <p style="margin-bottom:14px;">四个端互相独立、业务边界清晰，按"端"切分——每人独立负责一个完整端（前端 + 该端相关后端 API），互不阻塞。环境、数据库、登录鉴权等公共模块由四人同步共建。</p>
+    <div class="strategy">
+      <div class="persona p1">
+        <div class="role">成员 A · 蓝</div>
+        <div class="name">公众监督员端 (NEPS)</div>
+        <div class="scope">注册 / 登录 / 选择网格（省-市联动）/ AQI 反馈 / 历史列表</div>
+        <div class="hours">预计 <b>17 h</b></div>
+      </div>
+      <div class="persona p2">
+        <div class="role">成员 B · 绿</div>
+        <div class="name">网格员端 (NEPG)</div>
+        <div class="scope">登录 / 指派任务列表 / 确认 AQI（实时计算）/ 提交实测</div>
+        <div class="hours">预计 <b>18 h</b></div>
+      </div>
+      <div class="persona p3">
+        <div class="role">成员 C · 橙</div>
+        <div class="name">系统管理员端 (NEPM)</div>
+        <div class="scope">后台布局 / 反馈管理 / 指派（本地+异地）/ AQI 确认 / 4 个统计</div>
+        <div class="hours">预计 <b>22 h</b></div>
+      </div>
+      <div class="persona p4">
+        <div class="role">成员 D · 紫</div>
+        <div class="name">决策者大屏端 (NEPV)</div>
+        <div class="scope">大屏布局 / 中国地图 / 8 图表 / 3 KPI / 5s 轮询</div>
+        <div class="hours">预计 <b>17 h</b></div>
+      </div>
+    </div>
+    <div class="note">
+      <b>平衡说明：</b>管理员端业务最复杂（10+ 页面含指派逻辑），所以工时略多；公众监督员端和大屏端业务相对单一，工时略少。差异控制在 5h 以内。
+    </div>
+    <div class="note">
+      <b>阶段边界（防重合）：</b>
+      <b>启动</b>=空壳能跑（工程/登录/代理/公共模板）；
+      <b>全量</b>=业务页 + 真实接口（含统计后端）；
+      <b>联调</b>=对数据格式、空数据、边界用例，<b>禁止再写一遍同名接口</b>。
+      每人只 scaffold 自己负责的端；公共 <code>request.js</code> 模板由 C 提供，A/B/D 复制后改端口。
+    </div>
+  </div>
+
+  <!-- 阶段一 -->
+  <div class="card">
+    <h2>阶段一：D1 项目启动（上午建后端，下午各端脚手架）</h2>
+    <div class="tasks">
+
+      <div class="task shared">
+        <div class="task-head">
+          <span class="task-id">1.1</span>
+          <span class="task-title">需求拆解 + 接口清单</span>
+          <div class="task-meta">
+            <span class="task-owner owner-shared">全员</span>
+            <span class="task-hours">1 h</span>
+            <span class="task-when">D1 上午</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>具体动作</h4>
+          <ul>
+            <li>4 人一起过需求规格说明书和原型图，30 分钟</li>
+            <li>列接口清单（URL、请求方法、参数、返回结构），写到共享文档</li>
+            <li>统一字段命名：<code>provinceId</code> <code>cityId</code> <code>aqiLevel</code> <code>so2Concentration</code> 等</li>
+            <li>约定 4 个前端端口：8081（NEPS）/ 8082（NEPG）/ 8083（NEPM）/ 8084（NEPV）</li>
+            <li>约定后端返回结构统一：<code>{ code:200, msg:"ok", data:{...} }</code></li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>产出</h4>
+          <ul>
+            <li>接口清单 Markdown（群里共享）</li>
+            <li>命名规范文档</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>D1 上午 10 点前群里发"接口清单 v1.0"
+        </div>
+      </div>
+
+      <div class="task p1">
+        <div class="task-head">
+          <span class="task-id">1.2</span>
+          <span class="task-title">后端工程 + 8 表 SQL + 种子数据</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p1">A 主</span>
+            <span class="task-owner owner-p2">B 复核</span>
+            <span class="task-hours">2 h</span>
+            <span class="task-when">D1 上午</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>具体动作</h4>
+          <ul>
+            <li>用 Spring Initializr 建 <code>nep-backend</code> 工程，引入 web、mybatis-plus、mysql-connector、lombok</li>
+            <li>写 <code>application.yml</code>：数据源、端口 8080、MyBatis-Plus 配置</li>
+            <li>加 <code>@CrossOrigin</code> 全局跨域，或写 <code>CorsConfig</code></li>
+            <li>建统一返回类 <code>R{code,msg,data}</code> 和 <code>PageResult</code></li>
+            <li>建 8 张表的建表 SQL（aqi、grid_province、grid_city、grid_member、supervisor、admins、aqi_feedback、statistics）</li>
+            <li>用 MyBatis-Plus 代码生成器生成 Entity、Mapper、Service</li>
+            <li>录入种子数据：34 个省份、106 个大城市（重点省会）、6 个 AQI 等级</li>
+            <li>写一个测试 Controller <code>/api/test/hello</code> 验证能跑通</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>关键文件</h4>
+          <ul>
+            <li><code>src/main/java/com/neusoft/nep/</code> 下分 <code>common/</code> <code>entity/</code> <code>mapper/</code> <code>service/</code> <code>controller/</code></li>
+            <li><code>src/main/resources/sql/init.sql</code></li>
+            <li><code>src/main/resources/application.yml</code></li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>D1 上午 12 点前群里发"后端跑起来了，<code>GET /api/test/hello</code> 返回 200"
+        </div>
+      </div>
+
+      <div class="task p3">
+        <div class="task-head">
+          <span class="task-id">1.3</span>
+          <span class="task-title">NEPM 脚手架 + 公共 request 模板</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p3">C</span>
+            <span class="task-hours">1.5 h</span>
+            <span class="task-when">D1 下午</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>具体动作（只做空壳，不做业务页）</h4>
+          <ul>
+            <li>建 <code>nep-frontend-nepm</code>（Vite/Vue CLI 均可），引入 UI 库、Axios、Vue Router、Pinia</li>
+            <li>抽出可复用模板：<code>request.js</code>（拦截器/token/401）+ 登录页骨架，群里共享给 A/B/D 复制</li>
+            <li>NEPM：路由守卫 + <code>user</code> store + 管理员登录页（调 <code>POST /api/admin/login</code> 或先 Mock）</li>
+            <li>配 proxy：端口 <b>8083</b>，<code>/api</code> → <code>8080</code></li>
+            <li><b>不做</b>：反馈列表/指派/统计图表（留给 2.C）</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>NEPM 能启动；登录页可打开；模板已发群。同步：A/B 各自 scaffold NEPS(8081)/NEPG(8082)
+        </div>
+      </div>
+
+      <div class="task p4">
+        <div class="task-head">
+          <span class="task-id">1.4</span>
+          <span class="task-title">NEPV 大屏脚手架</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p4">D</span>
+            <span class="task-hours">1.5 h</span>
+            <span class="task-when">D1 下午</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>具体动作（只做空壳，不做图表业务）</h4>
+          <ul>
+            <li>建 <code>nep-frontend-nepv</code>，复制 C 的 <code>request.js</code> 模板</li>
+            <li>登录页（管理员账号，走 <code>POST /api/admin/login</code>）+ 空白大屏路由占位</li>
+            <li>配 proxy：端口 <b>8084</b>；预装 ECharts 依赖即可，图表组件放到 2.D</li>
+            <li><b>不做</b>：地图/8 图表/KPI/5s 轮询（留给 2.D）</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>NEPV 能启动；登录后进入空白大屏页
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 阶段二 -->
+  <div class="card">
+    <h2>阶段二：D2-D4 四端并行开发</h2>
+    <div class="tasks">
+
+      <div class="task p1">
+        <div class="task-head">
+          <span class="task-id">2.A</span>
+          <span class="task-title">NEPS 公众监督员端 全量</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p1">A</span>
+            <span class="task-hours">6 h</span>
+            <span class="task-when">D2</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>页面清单（5 个）</h4>
+          <ul>
+            <li><b>注册页</b>：手机号（Blur 查重）、真实姓名、出生日期、性别单选、密码、确认密码</li>
+            <li><b>登录页</b>：手机号+密码，登录后跳选择网格</li>
+            <li><b>选择网格地址</b>：省-市二级联动（Change 事件重查市），下一步按钮跳 AQI 选择</li>
+            <li><b>AQI 选择+反馈</b>：展示 6 等级参考表 + 单选预估等级 + 多行文本反馈框 + 提交按钮</li>
+            <li><b>历史反馈列表</b>：按当前用户查自己提交过的所有反馈，下拉刷新</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>对应后端接口</h4>
+          <ul>
+            <li><code>POST /api/supervisor/register</code>（含手机号唯一性校验）</li>
+            <li><code>POST /api/supervisor/login</code></li>
+            <li><code>GET /api/region/provinces</code> <code>GET /api/region/cities/{provinceId}</code></li>
+            <li><code>GET /api/aqi/levels</code> <code>POST /api/aqiFeedback/submit</code></li>
+            <li><code>GET /api/aqiFeedback/myList?supervisorId=...</code></li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>关键交互</h4>
+          <ul>
+            <li>手机号 Blur 调 <code>GET /api/supervisor/checkPhone?phone=xxx</code>，已注册就提示</li>
+            <li>省下拉 Change 事件清空市下拉并重查</li>
+            <li>提交反馈成功后跳历史列表</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>D2 晚上群里发截图：完整跑通注册→登录→选择网格→提交反馈→看到历史
+        </div>
+      </div>
+
+      <div class="task p2">
+        <div class="task-head">
+          <span class="task-id">2.B</span>
+          <span class="task-title">NEPG 网格员端 全量</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p2">B</span>
+            <span class="task-hours">7 h</span>
+            <span class="task-when">D2</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>页面清单（3 个）</h4>
+          <ul>
+            <li><b>登录页</b>：登录编码+密码（无注册，HR 系统管理）</li>
+            <li><b>指派任务列表</b>：显示所有指派给当前网格员的任务，含网格地址、预估等级、状态</li>
+            <li><b>确认 AQI 详情</b>：展示任务详情 + 3 个浓度输入框（SO2/CO/PM2.5）+ 实时计算 + 提交</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>对应后端接口</h4>
+          <ul>
+            <li><code>POST /api/gridMember/login</code></li>
+            <li><code>GET /api/aqiFeedback/assignedList?gridMemberId=...</code></li>
+            <li><code>GET /api/aqiFeedback/detail/{id}</code></li>
+            <li><code>POST /api/aqiFeedback/confirm</code>（提交实测数据，自动算总 AQI）</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>AQI 计算核心逻辑（重点）</h4>
+          <ul>
+            <li>公式：<code>AQI = MAX(IAQI_SO2, IAQI_CO, IAQI_PM2.5)</code></li>
+            <li>每个浓度输入框 Change 事件：根据《浓度限值表》查出 IAQI 等级</li>
+            <li>前端实时显示分项等级 + 综合等级（颜色按等级变色：优/良/轻/中/重/严重）</li>
+            <li>提交时后端再算一次做校验，前端算的是体验、后端算的是权威</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>限值表数据准备</h4>
+          <ul>
+            <li>SO2 一级 0-150、二级 150-500、三级 500-650、四级 650-800…（μg/m³）</li>
+            <li>CO 一级 0-5、二级 5-10、三级 10-35、四级 35-60…（mg/m³）</li>
+            <li>PM2.5 一级 0-35、二级 35-75、三级 75-115、四级 115-150…（μg/m³）</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>D2 晚上群里发截图：跑通登录→看任务→填浓度→实时看到 AQI 等级→提交成功
+        </div>
+      </div>
+
+      <div class="task p3">
+        <div class="task-head">
+          <span class="task-id">2.C</span>
+          <span class="task-title">NEPM 系统管理员端 全量</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p3">C</span>
+            <span class="task-hours">8 h</span>
+            <span class="task-when">D3</span>
+          </div>
+        </div>
+        <div class="note" style="margin-top:0;">
+          <b>与 1.3 的边界：</b>登录页沿用启动脚手架，本任务从「后台布局」起做业务；
+          <b>统计 4 接口必须在 D3 内写完</b>（不要拖到 3.1），否则大屏 D 无法联调。
+        </div>
+        <div class="task-section">
+          <h4>页面清单（登录已完成，本包 7 项业务）</h4>
+          <ul>
+            <li><b>后台布局</b>：左侧导航 + 头部用户信息 + OUT 退出（登录页不再计入本包）</li>
+            <li><b>公众监督反馈列表</b>：多条件查询（省/市/AQI 等级/状态）+ 分页 + 未指派/已指派筛选</li>
+            <li><b>反馈详情</b>：展示监督员反馈全部信息</li>
+            <li><b>指派网格员页</b>：本地优先，无则异地就近；含本地/异地切换开关</li>
+            <li><b>实测确认列表</b>：网格员提交的实测数据，查询分页</li>
+            <li><b>统计页</b>：省分组超标 / AQI 分布+趋势 / 网格覆盖率（接真实接口）</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>对应后端接口（D3 当天交付，供 D 复用）</h4>
+          <ul>
+            <li><code>POST /api/aqiFeedback/pageQuery</code>、<code>GET /api/aqiFeedback/detail/{id}</code></li>
+            <li><code>GET /api/gridMember/byRegion</code>、<code>POST /api/aqiFeedback/assign</code></li>
+            <li><code>POST /api/statistics/.../pageQuery</code> 或实测列表查询（按官方表 <code>statistics</code>）</li>
+            <li><b>统计（必须当天完成）：</b>
+              <code>GET /api/statistics/provinceExceed</code>、
+              <code>/aqiDistribution</code>、<code>/aqiTrend</code>、<code>/gridCoverage</code>、
+              <code>/realTimeCount</code>
+            </li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>指派逻辑要点（对齐官方库字段）</h4>
+          <ul>
+            <li>按反馈的 <code>province_id</code> + <code>city_id</code> 查工作状态网格员（<code>grid_member.state=0</code>）</li>
+            <li>有 → 本地指派；无 → 异地选择其它省市网格员</li>
+            <li>更新 <code>aqi_feedback.gm_id / assign_date / assign_time / state</code>（0→1）</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>D3 晚上：登录→查反馈→指派（含异地）→统计页有真实数据；统计 API 可被 Apifox 调通
+        </div>
+      </div>
+
+      <div class="task p4">
+        <div class="task-head">
+          <span class="task-id">2.D</span>
+          <span class="task-title">NEPV 决策者大屏端 全量</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p4">D</span>
+            <span class="task-hours">6 h</span>
+            <span class="task-when">D3 晚-D4 午</span>
+          </div>
+        </div>
+        <div class="note" style="margin-top:0;">
+          <b>与 1.4 的边界：</b>登录与空白页已完成；本包只做布局/地图/图表/轮询。
+          <b>依赖：</b>C 在 D3 交付的统计接口；D3 白天可用 Mock，D3 晚起切真实接口。
+        </div>
+        <div class="task-section">
+          <h4>页面清单（1 个大屏）</h4>
+          <ul>
+            <li>1920×1080 适配布局：顶部标题 + 中央中国地图 + 左右各 4 个图表 + 底部 3 个 KPI</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>8 个图表组件</h4>
+          <ul>
+            <li>左 1：全国省网格覆盖率（仪表盘）</li>
+            <li>左 2：全国大城市网格覆盖率（仪表盘）</li>
+            <li>左 3：AQI 等级分布（饼图）</li>
+            <li>左 4：12 个月超标趋势（折线/面积图）</li>
+            <li>右 1-3：PM2.5/SO2/CO 超标累计（柱状图）</li>
+            <li>右 4：省分组 AQI 超标累计（柱状图）</li>
+            <li>底部 3 KPI：检测总数量 / 良好数量 / 污染数量（带数字滚动）</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>对接接口（复用 C，本包不写后端）</h4>
+          <ul>
+            <li><code>GET /api/statistics/provinceExceed</code>、<code>/aqiDistribution</code>、<code>/aqiTrend</code></li>
+            <li><code>GET /api/statistics/gridCoverage</code>、<code>/realTimeCount</code></li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>技术要点</h4>
+          <ul>
+            <li>ECharts 封装 <code>BarChart.vue</code> / <code>PieChart.vue</code> 等</li>
+            <li>中国地图 JSON + 按省超标高亮</li>
+            <li><code>setInterval</code> 每 5 秒刷新；注意组件销毁时 <code>clearInterval</code></li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>D4 中午：地图+8 图表+3 KPI 有真实数据，5 秒自动刷新
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 阶段三 -->
+  <div class="card">
+    <h2>阶段三：D5 联调、测试、验收</h2>
+    <div class="tasks">
+
+      <div class="task p3">
+        <div class="task-head">
+          <span class="task-id">3.1</span>
+          <span class="task-title">统计/大屏联调与边界用例</span>
+          <div class="task-meta">
+            <span class="task-owner owner-p3">C</span>
+            <span class="task-owner owner-p4">D</span>
+            <span class="task-hours">3 h</span>
+            <span class="task-when">D4 下午</span>
+          </div>
+        </div>
+        <div class="note" style="margin-top:0;">
+          <b>与 2.C / 2.D 的边界：</b>统计接口与大屏图表应已在全量阶段完成。
+          本包<b>禁止重写同名接口/重做图表</b>，只做联调、格式对齐与边界兜底。
+        </div>
+        <div class="task-section">
+          <h4>具体动作</h4>
+          <ul>
+            <li>C：Apifox 回归统计接口边界（空库、单省无数据、跨月）；修 bug，不新开接口</li>
+            <li>D：核对 ECharts 字段映射；空数据占位；轮询启停与内存泄漏检查</li>
+            <li>双方对齐响应结构（数组/对象、字段驼峰），改一边同步更新 <code>docs/api-list.md</code></li>
+            <li>必要时补 <code>realTimeCount</code> 小修复（若 2.C 已交付则只修不重写）</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>D4 下午 5 点前：大屏全图有数据或优雅空态；边界用例有记录
+        </div>
+      </div>
+
+      <div class="task shared">
+        <div class="task-head">
+          <span class="task-id">3.2</span>
+          <span class="task-title">端到端联调（完整业务流跑通）</span>
+          <div class="task-meta">
+            <span class="task-owner owner-shared">全员</span>
+            <span class="task-hours">4 h</span>
+            <span class="task-when">D5 上午</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>测试主流程</h4>
+          <ul>
+            <li>公众监督员 A 注册手机号 13800000001、登录、选择北京-北京、提交 AQI 等级 3 反馈</li>
+            <li>管理员 admin/123456 登录、看到 A 的反馈、本地指派给北京网格员 001</li>
+            <li>网格员 001/123456 登录、看到指派任务、填 SO2=200/CO=8/PM2.5=80、提交</li>
+            <li>系统算出综合 AQI 等级：SO2 IAQI=2 / CO IAQI=2 / PM2.5 IAQI=3 → 总 AQI=3（取最大）</li>
+            <li>管理员重新登录、查 AQI 确认列表、看到网格员 001 提交的数据</li>
+            <li>打开大屏、看到北京这个省的超标数+1、AQI 分布饼图等级 3 占比变化</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>测试异地指派分支</h4>
+          <ul>
+            <li>选一个没有网格员的网格（如某小城市）→ 管理员指派时本地列表为空</li>
+            <li>打开异地开关、选其它省市的网格员、提交、确认指派成功</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>4 人各用一遍主流程，无报错
+        </div>
+      </div>
+
+      <div class="task shared">
+        <div class="task-head">
+          <span class="task-id">3.3</span>
+          <span class="task-title">Bug 修复 + 验收演示</span>
+          <div class="task-meta">
+            <span class="task-owner owner-shared">全员</span>
+            <span class="task-hours">3 h</span>
+            <span class="task-when">D5 下午</span>
+          </div>
+        </div>
+        <div class="task-section">
+          <h4>Bug 修复重点</h4>
+          <ul>
+            <li>空数据：管理员查某无数据的省 → 不能报错，前端显示"无数据"</li>
+            <li>AQI 计算回归：边界浓度值（如 SO2=150 正好切到下一级）必须正确</li>
+            <li>大屏轮询：网络中断后能否自动重连</li>
+            <li>并发：两个监督员同时提交反馈是否冲突</li>
+            <li>权限：公众监督员 token 能不能访问管理员接口（应该 403）</li>
+          </ul>
+        </div>
+        <div class="task-section">
+          <h4>验收演示准备</h4>
+          <ul>
+            <li>各端提前打开，准备好演示账号（截图贴文档）</li>
+            <li>用 AI 生成 README.md（项目介绍、技术栈、启动方式、演示账号）</li>
+            <li>用 AI 生成 API.md（所有接口的 URL、参数、返回示例）</li>
+            <li>录一段 2 分钟的端到端演示视频，备用</li>
+          </ul>
+        </div>
+        <div class="deliverable">
+          <b>验收：</b>D5 下午 5 点前项目可演示，README + API 文档齐全
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>甘特图（5 天排期）</h2>
+    <div class="legend">
+      <span><i style="background:#1976d2"></i>成员 A · 公众监督员端</span>
+      <span><i style="background:#388e3c"></i>成员 B · 网格员端</span>
+      <span><i style="background:#f57c00"></i>成员 C · 系统管理员端</span>
+      <span><i style="background:#7b1fa2"></i>成员 D · 决策者大屏端</span>
+      <span><i style="background:#607d8b"></i>公共模块 · 全员共建</span>
+    </div>
+    <div id="gantt" class="chart-box"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>人均工时分布</h2>
+      <div id="hours" class="chart-box-small"></div>
+    </div>
+    <div class="card">
+      <h2>各端工作包数</h2>
+      <div id="wpCount" class="chart-box-small"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>开发流程工具（精简到 2 个）</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#1e88e5;color:#fff;">
+          <th style="padding:10px;text-align:left;">用途</th>
+          <th style="padding:10px;text-align:left;">工具</th>
+          <th style="padding:10px;text-align:left;">用法</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;">代码开发</td>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;"><b>Cursor</b></td>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;">4 人主力 IDE，AI 写代码 + 解释 + 调试</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;">代码托管</td>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;"><b>GitHub</b></td>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;">私有仓库，每人 feature 分支，每日 merge 一次</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;">沟通 + 截图</td>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;"><b>飞书/微信群</b></td>
+          <td style="padding:10px;border-bottom:1px solid #eceff1;">任务分配、卡点反馈、每日交付截图</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;">接口联调（备用）</td>
+          <td style="padding:10px;"><b>Apifox</b></td>
+          <td style="padding:10px;">D2 联调阶段再开，不用提前准备</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:16px;">
+      <b>砍掉的工具：</b>GitHub Projects（任务群里口头分）、VS Code Live Share（Cursor AI 替代）、Notion（commit message 替代）、Trello/Slack/语雀/Postman 等
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>协作约定</h2>
+    <ul style="padding-left:22px;line-height:1.9;">
+      <li><b>每日站会</b>：开工前 5 分钟群里发"今日交付"，截图打卡</li>
+      <li><b>分支策略</b>：每人 feature 分支，每日 merge 到 main 一次</li>
+      <li><b>接口契约</b>：以 <code>docs/api-list.md</code> + 官方 <code>nep.sql</code> 为准，不私自改字段</li>
+      <li><b>联调负责人</b>：C（管理员端是业务中枢；统计接口由 C 在 D3 交付）</li>
+      <li><b>防重合</b>：启动不做业务页；全量做完真实接口；联调阶段不重写同名接口</li>
+      <li><b>卡点处理</b>：卡 30 分钟直接在群里喊，别自己死磕</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+const ganttData = [
+  { name: 'D1 上午 需求拆解', start: 1, end: 1, owner: '公共' },
+  { name: 'D1 上午 后端工程+SQL', start: 1, end: 1, owner: 'A' },
+  { name: 'D1 下午 NEPM脚手架+模板', start: 1, end: 1, owner: 'C' },
+  { name: 'D1 下午 NEPV脚手架', start: 1, end: 1, owner: 'D' },
+  { name: 'D2 NEPS公众监督员端', start: 2, end: 2, owner: 'A' },
+  { name: 'D2 NEPG网格员端', start: 2, end: 2, owner: 'B' },
+  { name: 'D3 NEPM全量(含统计API)', start: 3, end: 3, owner: 'C' },
+  { name: 'D3-D4 NEPV大屏全量', start: 3, end: 4, owner: 'D' },
+  { name: 'D4 下午 联调与边界', start: 4, end: 4, owner: 'C' },
+  { name: 'D5 上午 端到端联调', start: 5, end: 5, owner: '公共' },
+  { name: 'D5 下午 Bug修复+验收', start: 5, end: 5, owner: '公共' },
+];
+
+const colorMap = { A:'#1976d2', B:'#388e3c', C:'#f57c00', D:'#7b1fa2', '公共':'#607d8b' };
+
+const ganttChart = echarts.init(document.getElementById('gantt'));
+ganttChart.setOption({
+  tooltip: { formatter: p => `${p.name}<br/>D${p.value[1]} ~ D${p.value[2]}<br/>负责人: ${p.owner}` },
+  grid: { left: 180, right: 30, top: 20, bottom: 30 },
+  xAxis: { type: 'value', min: 0.5, max: 5.5, interval: 1, name: '工作日' },
+  yAxis: { type: 'category', data: ganttData.map(d=>d.name).reverse(), axisLabel:{fontSize:11} },
+  series: [{
+    type: 'bar', barWidth: 18, stack: 'a',
+    data: ganttData.map(d=>({
+      value: [0, d.start, d.end, d.owner],
+      itemStyle: { color: colorMap[d.owner], borderRadius:3 }
+    })).reverse()
+  }]
+});
+
+const hoursChart = echarts.init(document.getElementById('hours'));
+hoursChart.setOption({
+  tooltip: { trigger: 'item' },
+  legend: { bottom: 0, textStyle:{fontSize:12} },
+  series: [{
+    type: 'pie', radius: ['45%','70%'], center:['50%','45%'],
+    label: { formatter: '{b}\n{c} h ({d}%)', fontSize: 11 },
+    data: [
+      { value: 17, name: '成员 A 公众监督员', itemStyle:{color:'#1976d2'} },
+      { value: 18, name: '成员 B 网格员', itemStyle:{color:'#388e3c'} },
+      { value: 22, name: '成员 C 管理员', itemStyle:{color:'#f57c00'} },
+      { value: 17, name: '成员 D 决策者大屏', itemStyle:{color:'#7b1fa2'} },
+    ]
+  }]
+});
+
+const wpChart = echarts.init(document.getElementById('wpCount'));
+wpChart.setOption({
+  tooltip: { trigger: 'axis' },
+  grid: { left: 50, right: 30, top: 20, bottom: 30 },
+  xAxis: { type: 'category', data: ['公众监督员A','网格员B','管理员C','决策者D','公共'] },
+  yAxis: { type: 'value', name: '工作包数' },
+  series: [{
+    type: 'bar', barWidth: 40,
+    data: [
+      { value: 2, itemStyle:{color:'#1976d2'} },
+      { value: 2, itemStyle:{color:'#388e3c'} },
+      { value: 3, itemStyle:{color:'#f57c00'} },
+      { value: 2, itemStyle:{color:'#7b1fa2'} },
+      { value: 4, itemStyle:{color:'#607d8b'} },
+    ],
+    label: { show: true, position: 'top' }
+  }]
+});
+
+window.addEventListener('resize', () => {
+  ganttChart.resize(); hoursChart.resize(); wpChart.resize();
+});
+</script>
+</body>
+</html>
