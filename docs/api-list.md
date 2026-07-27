@@ -29,7 +29,7 @@
 | `aqi_feedback` | `af_id` | `tel_id`, `address`, `information`, `estimated_grade`, `af_date`, `af_time`, `state`(0未指派/1已指派/2已确认) |
 | `grid_member` | `gm_id` | `gm_code`, `gm_name`, `password`, `province_id`, `city_id`, `state` |
 | `admins` | `admin_id` | `admin_code`, `password` |
-| `statistics` | `id` | `so2_value/level`, `co_value/level`, `spm_value/level`, `aqi_id`, `gm_id`, `fd_id` |
+| `statistics` | `id` | `so2_value/level`, `co_value/level`, `spm_value/level`, `aqi_id`, `gm_id`, `af_id`(关联反馈单号), `fd_id`(监督员电话) |
 
 ---
 
