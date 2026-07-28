@@ -368,7 +368,7 @@ public class GridMemberServiceImpl implements GridMemberService {
 
 
 
-        if (feedback.getState() == 2) {
+        if (Integer.valueOf(2).equals(feedback.getState())) {
 
             throw new BusinessException(
                     "任务已经完成"
@@ -386,6 +386,14 @@ public class GridMemberServiceImpl implements GridMemberService {
 
         Integer spm =
                 dto.getSpmValue();
+
+        if (so2 == null || co == null || spm == null) {
+
+            throw new BusinessException(
+                    "AQI数据不能为空"
+            );
+
+        }
 
 
 
@@ -437,6 +445,8 @@ public class GridMemberServiceImpl implements GridMemberService {
                 feedback.getAddress()
         );
 
+        statistics.setInformation(feedback.getInformation());
+
 
         statistics.setSo2Value(so2);
         statistics.setSo2Level(so2Level);
@@ -459,6 +469,7 @@ public class GridMemberServiceImpl implements GridMemberService {
         );
 
 
+
         statistics.setGmId(
                 gmId
         );
@@ -468,6 +479,15 @@ public class GridMemberServiceImpl implements GridMemberService {
         // fdId = task.telId
         statistics.setFdId(
                 feedback.getTelId()
+        );
+
+        statistics.setConfirmDate(
+                java.time.LocalDate.now().toString()
+        );
+
+        statistics.setConfirmTime(
+                java.time.LocalTime.now()
+                        .toString()
         );
 
 
